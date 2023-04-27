@@ -33,3 +33,17 @@ def depart_edit(request, id):
     title = request.POST.get('title')
     models.Department.objects.filter(id=id).update(title=title)
     return redirect('/depart/list/')
+
+
+def user_list(request):
+    query = models.UserInfo.objects.all()
+    return render(request, 'user_list.html', {'query': query})
+
+
+def user_add(request):
+    if request.method == 'GET':
+        return render(request, 'user_add.html')
+
+    title = request.POST.get("title")
+    models.Department.objects.create(title=title)
+    return redirect("/depart/list/")
