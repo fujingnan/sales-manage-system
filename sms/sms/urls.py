@@ -15,22 +15,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from manageApp import views
+from manageApp.views import depart, user, pretty, admin
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('depart/list/', views.depart_list),
-    path('depart/add/', views.depart_add),
-    path('depart/delete/', views.depart_del),
-    path('depart/edit/<int:id>/', views.depart_edit),
+    path('depart/list/', depart.depart_list),
+    path('depart/add/', depart.depart_add),
+    path('depart/delete/', depart.depart_del),
+    path('depart/edit/<int:id>/', depart.depart_edit),
 
-    path('user/list/', views.user_list),
-    path('user/add/', views.user_add),
-    path('user/edit/<int:nid>/', views.user_edit),
-    path('user/delete/<int:nid>', views.user_delete),
-    path('number/list/', views.num_list),
-    path('number/add/', views.num_add),
-    path('number/edit/<int:nid>', views.num_edit),
-    path('number/delete/<int:nid>', views.num_delete),
-    path('search/reset/', views.search_reset),
+    path('user/list/', user.user_list),
+    path('user/add/', user.user_add),
+    path('user/edit/<int:nid>/', user.user_edit),
+    path('user/delete/<int:nid>', user.user_delete),
+
+    path('number/list/', pretty.num_list),
+    path('number/add/', pretty.num_add),
+    path('number/edit/<int:nid>', pretty.num_edit),
+    path('number/delete/<int:nid>', pretty.num_delete),
+    path('search/reset/', pretty.search_reset),
+
+    path('admin/list/', admin.admin_list),
+    path('public/add/', admin.admin_add)
 ]

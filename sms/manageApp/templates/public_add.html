@@ -8,7 +8,7 @@
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">新建用户</h3>
+                <h3 class="panel-title">{{ entity }}</h3>
             </div>
             <div class="panel-body">
                 <form method="post" novalidate>
@@ -31,7 +31,7 @@
     <script src="{% static 'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js' %}"></script>
     <script>
         $(function () {
-            $('#id_entry_time').datepicker(
+            $('#id').datepicker(
                 {
                     format: 'yyyy-mm-dd',
                     startData: '0',

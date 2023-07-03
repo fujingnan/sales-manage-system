@@ -12,6 +12,7 @@
         }
 
     </style>
+    {% block css %}{% endblock %}
 </head>
 <body>
 
@@ -34,6 +35,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav" >
+                <li class="active"><a href="/admin/list/" style="background-color: #f8f8f8">管理员信息 <span class="sr-only">(current)</span></a></li>
                 <li class="active"><a href="/depart/list/" style="background-color: #f8f8f8">部门管理 <span class="sr-only">(current)</span></a></li>
                 <li class="active"><a href="/user/list/" style="background-color: #f8f8f8">用户管理 <span class="sr-only">(current)</span></a></li>
                 <li class="active"><a href="/number/list/" style="background-color: #f8f8f8">靓号管理 <span class="sr-only">(current)</span></a></li>
@@ -65,6 +67,8 @@
 <div>
     {% block content %}{% endblock %}
 </div>
-</div>
+<script src="{% static 'js/jQuery3.6.4.js' %}"></script>
+<script src="{% static 'plugins/bootstrap341/js/bootstrap.min.js' %}"></script>
+{% block js %}{% endblock %}
 </body>
 </html>

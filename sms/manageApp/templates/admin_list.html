@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 10px">
+            <a class="btn btn-success" href="/public/add/">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                新建管理员
+            </a>
+        </div>
+
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true" style="margin-right: 3px"></span>管理员列表
+            </div>
+
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>添加时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in query %}
+                    <tr>
+                        <td>{{ obj.id }}</td>
+                        <td>{{ obj.username }}</td>
+                        <td>{{ obj.password }}</td>
+                        <td>{{ obj.entry_time|date:"Y-m-d" }}</td>
+                        <td>
+
+                            <a href="/admin/edit/{{ obj.id }}/" class="btn btn-primary btn-xs">编辑</a>
+                            <a href="/admin/delete/{{ obj.id }}" class="btn btn-danger btn-xs">删除</a>
+
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="...">
+            <ul class="pagination">
+                {#                <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>#}
+                {#                <li><a href="#">1</a></li>#}
+                {#                <li><a href="#">2</a></li>#}
+                {#                <li><a href="#">3</a></li>#}
+                {#                <li><a href="#">4</a></li>#}
+                {#                <li><a href="#">5</a></li>#}
+                {{ page_list_show }}
+
+                {#                <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>#}
+                <li>
+                    <form style="float: left" method="get">
+                        <input type="text" class="form-control" name="page"
+                               style="float: left;border-radius: 0;width: 55px;display: inline-block" placeholder="页码">
+                        <span style="margin-left: 0;float: left">
+                            <button class="btn btn-default" style="border-radius: 0;" type="submit">跳转</button>
+                        </span>
+                        <span style="margin-left: 6px; margin-top: 16px; float: left">
+                            &lt 第{{ current_page }}页/共{{ page_total_size }}页 &gt
+                        </span>
+                    </form>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

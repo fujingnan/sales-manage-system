@@ -68,5 +68,7 @@ class Pagination(object):
         page_list_show = mark_safe(page_list_str)
         start_show = int(page - 1) * self.page_per_size
         end_show = start_show + self.page_per_size
+        if not page_total_size:
+            return (self.query, page_list_show, page, page_total_size)
         finall_query = self.query[start_show: end_show]
         return (finall_query, page_list_show, page, page_total_size)
