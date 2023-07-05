@@ -36,5 +36,7 @@ urlpatterns = [
     path('search/reset/', pretty.search_reset),
 
     path('admin/list/', admin.admin_list),
-    path('public/add/', admin.admin_add)
+    path('public/add/', admin.admin_add),
+    path('admin/edit/<int:nid>/', admin.admin_edit),
+    path('admin/delete/<int:nid>', admin.admin_delete),
 ]

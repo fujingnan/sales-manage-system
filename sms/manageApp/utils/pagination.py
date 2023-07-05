@@ -64,7 +64,7 @@ class Pagination(object):
         self.page_dict.setlist(self.page_url_params, [min(page + 1, page_total_size)])
         page_list_str += '<li><a href="?{}">下一页</a></li>'.format(self.page_dict.urlencode())
         self.page_dict.setlist(self.page_url_params, [page_total_size])
-        page_list_str += '<li><a href="?page={}">尾页</a></li>'.format(self.page_dict.urlencode())
+        page_list_str += '<li><a href="?{}">尾页</a></li>'.format(self.page_dict.urlencode())
         page_list_show = mark_safe(page_list_str)
         start_show = int(page - 1) * self.page_per_size
         end_show = start_show + self.page_per_size

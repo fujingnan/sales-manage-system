@@ -5,7 +5,10 @@ from django.db import models
 class Admin(models.Model):
     username = models.CharField(verbose_name='用户名', max_length=128)
     password = models.CharField(verbose_name='密码', max_length=64)
-    signup_time = models.DateTimeField(verbose_name='注册时间', null=True)
+    # signup_time = models.DateTimeField(verbose_name='注册时间', null=True, auto_now_add=True)
+    signup_time = models.DateTimeField(verbose_name='注册时间', null=True, auto_now_add=True)
+    update_time = models.DateTimeField(verbose_name='最后修改时间', null=True, auto_now=True)
+
 
 
 class Department(models.Model):

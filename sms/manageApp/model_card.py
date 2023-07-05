@@ -83,17 +83,22 @@ class PrettyEditModel(BoostrapModelForm):
 
 
 class AdminModel(BoostrapModelForm):
+
+    show_list = ['username', 'password', 'confirm_pwd']
+
     confirm_pwd = forms.CharField(
         label="确认密码",
         widget=forms.PasswordInput(render_value=True)
     )
 
     class Meta:
-        model = models.Admin
-        fields = ['username', 'password', 'confirm_pwd', 'signup_time']
-        widgets = {
-            'password': forms.PasswordInput(render_value=True, attrs={'autocomplete': 'new-password'}),
-        }
+        pass
+
+    Meta.model = models.Admin
+    Meta.fields = show_list
+    Meta.widgets = {
+        'password': forms.PasswordInput(render_value=True, attrs={'autocomplete': 'new-password'}),
+    }
 
     def clean_password(self):
         pwd = md5(self.cleaned_data.get('password'))

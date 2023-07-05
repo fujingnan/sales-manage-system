@@ -31,7 +31,7 @@
     <script src="{% static 'plugins/bootstrap-datepicker/locales/bootstrap-datepicker.zh-CN.min.js' %}"></script>
     <script>
         $(function () {
-            $('#id').datepicker(
+            $('&#id_'+'{{ time_type }}').datepicker(
                 {
                     format: 'yyyy-mm-dd',
                     startData: '0',
