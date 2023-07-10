@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator, ValidationError
 import re
 
 
-class BoostrapModelForm(forms.ModelForm):
+class BootStrapModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for name, field in self.fields.items():
@@ -13,7 +13,7 @@ class BoostrapModelForm(forms.ModelForm):
             field.widget.attrs['placeholder'] = field.label
 
 
-class UserModel(BoostrapModelForm):
+class UserModel(BootStrapModelForm):
     name = forms.CharField(
         label='用户名',
         min_length=1,
@@ -36,7 +36,7 @@ class UserModel(BoostrapModelForm):
         # }
 
 
-class PrettyModel(BoostrapModelForm):
+class PrettyModel(BootStrapModelForm):
     # mobile = forms.CharField(
     #     label='手机号',
     #     validators=[RegexValidator(r'^1[0-9]\d{9}$', '手机号格式错误')]
@@ -60,7 +60,7 @@ class PrettyModel(BoostrapModelForm):
         return num
 
 
-class PrettyEditModel(BoostrapModelForm):
+class PrettyEditModel(BootStrapModelForm):
     # mobile 不可修改
     # mobile = forms.CharField(disabled=True, label='手机号')
 
@@ -82,8 +82,7 @@ class PrettyEditModel(BoostrapModelForm):
         return num
 
 
-class AdminModel(BoostrapModelForm):
-
+class AdminModel(BootStrapModelForm):
     show_list = ['username', 'password', 'confirm_pwd']
 
     confirm_pwd = forms.CharField(
@@ -111,3 +110,42 @@ class AdminModel(BoostrapModelForm):
         if not pwd == confirm_md5:
             raise ValidationError("密码不一致，请重新输入!")
         return confirm_md5
+
+
+class AdminEditModelForm(BootStrapModelForm):
+    class Meta:
+        model = models.Admin
+        fields = ['username']
+
+
+class AdminResetModelForm(BootStrapModelForm):
+    confirm_password = forms.CharField(
+        label="确认密码",
+        widget=forms.PasswordInput(render_value=True)
+    )
+
+    class Meta:
+        model = models.Admin
+        fields = ['password', 'confirm_password']
+        widgets = {
+            "password": forms.PasswordInput(render_value=True)
+        }
+
+    def clean_password(self):
+        pwd = self.cleaned_data.get("password")
+        md5_pwd = md5(pwd)
+
+        # 去数据库校验当前密码和新输入的密码是否一致
+        exists = models.Admin.objects.filter(id=self.instance.pk, password=md5_pwd).exists()
+        if exists:
+            raise ValidationError("新密码不能与旧密码相同")
+
+        return md5_pwd
+
+    def clean_confirm_pwd(self):
+        pwd = self.cleaned_data.get("password")
+        confirm = md5(self.cleaned_data.get("confirm_password"))
+        if confirm != pwd:
+            raise ValidationError("密码不一致")
+        # 返回什么，此字段以后保存到数据库就是什么。
+        return confirm

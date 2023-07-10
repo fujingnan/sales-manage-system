@@ -44,13 +44,33 @@ def admin_edit(request, nid):
     if not raw:
         return render(request, 'admin_update_error.html', {'msg': '数据不存在！'})
     if request.method == 'GET':
-        form = AdminModel(instance=raw)
+        form = AdminEditModelForm(instance=raw)
         return render(request, 'public_add.html', {'form': form, 'entity': '修改管理员信息'})
-    form = AdminModel(data=request.POST, instance=raw)
+    form = AdminEditModelForm(data=request.POST, instance=raw)
     if form.is_valid():
         form.save()
         return redirect('/admin/list/')
     return render(request, 'public_add.html', {'form': form, 'entity': '修改管理员信息'})
+
+
+def admin_reset(request, nid):
+    """ 重置密码 """
+    # 对象 / None
+    row_object = models.Admin.objects.filter(id=nid).first()
+    if not row_object:
+        return redirect('/admin/list/')
+
+    entity = "正在重置用户`{}`的密码".format(row_object.username)
+
+    if request.method == "GET":
+        form = AdminResetModelForm()
+        return render(request, 'public_add.html', {"form": form, "entity": entity})
+    # instance=obj让当前对象显示默认值
+    form = AdminResetModelForm(data=request.POST, instance=row_object)
+    if form.is_valid():
+        form.save()
+        return redirect('/admin/list/')
+    return render(request, 'public_add.html', {"form": form, "entity": entity})
 
 
 def admin_delete(request, nid):
