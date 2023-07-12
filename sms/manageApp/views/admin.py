@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.utils import timezone
 from manageApp.model_card import *
 from manageApp.utils.pagination import Pagination
 from manageApp.model_card import AdminModel
@@ -29,14 +28,14 @@ def admin_list(request):
 def admin_add(request):
     if request.method == 'GET':
         form = AdminModel()
-        return render(request, 'public_add.html', {'form': form, 'entity': '添加管理员'})
+        return render(request, 'admin_add.html', {'form': form, 'entity': '添加管理员'})
 
     form = AdminModel(data=request.POST)
     # form.signup_time = timezone.datetime.now()
     if form.is_valid():
         form.save()
         return redirect('/admin/list/')
-    return render(request, 'public_add.html', {'form': form, 'entity': '添加管理员', 'time_type': 'signup_time'})
+    return render(request, 'admin_add.html', {'form': form, 'entity': '添加管理员', 'time_type': 'signup_time'})
 
 
 def admin_edit(request, nid):
@@ -45,12 +44,12 @@ def admin_edit(request, nid):
         return render(request, 'admin_update_error.html', {'msg': '数据不存在！'})
     if request.method == 'GET':
         form = AdminEditModelForm(instance=raw)
-        return render(request, 'public_add.html', {'form': form, 'entity': '修改管理员信息'})
+        return render(request, 'admin_add.html', {'form': form, 'entity': '修改管理员信息'})
     form = AdminEditModelForm(data=request.POST, instance=raw)
     if form.is_valid():
         form.save()
         return redirect('/admin/list/')
-    return render(request, 'public_add.html', {'form': form, 'entity': '修改管理员信息'})
+    return render(request, 'admin_add.html', {'form': form, 'entity': '修改管理员信息'})
 
 
 def admin_reset(request, nid):
@@ -64,13 +63,13 @@ def admin_reset(request, nid):
 
     if request.method == "GET":
         form = AdminResetModelForm()
-        return render(request, 'public_add.html', {"form": form, "entity": entity})
+        return render(request, 'admin_add.html', {"form": form, "entity": entity})
     # instance=obj让当前对象显示默认值
     form = AdminResetModelForm(data=request.POST, instance=row_object)
     if form.is_valid():
         form.save()
         return redirect('/admin/list/')
-    return render(request, 'public_add.html', {"form": form, "entity": entity})
+    return render(request, 'admin_add.html', {"form": form, "entity": entity})
 
 
 def admin_delete(request, nid):

@@ -5,12 +5,20 @@ from django.core.validators import RegexValidator, ValidationError
 import re
 
 
-class BootStrapModelForm(forms.ModelForm):
+class BootStrap:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = field.label
+
+
+class BootStrapModelForm(BootStrap, forms.ModelForm):
+    pass
+
+
+class BootStrapForm(BootStrap, forms.Form):
+    pass
 
 
 class UserModel(BootStrapModelForm):
@@ -149,3 +157,20 @@ class AdminResetModelForm(BootStrapModelForm):
             raise ValidationError("密码不一致")
         # 返回什么，此字段以后保存到数据库就是什么。
         return confirm
+
+
+class LoginForm(BootStrapForm):
+    username = forms.CharField(
+        label="用户名",
+        widget=forms.TextInput,
+        required=True, # 默认必填项
+    )
+    password = forms.CharField(
+        label="密码",
+        widget=forms.PasswordInput(render_value=True),
+        required=True
+    )
+
+    def clean_password(self):
+        pwd = self.cleaned_data.get('password')
+        return md5(pwd)
