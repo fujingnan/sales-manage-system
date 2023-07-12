@@ -163,7 +163,7 @@ class LoginForm(BootStrapForm):
     username = forms.CharField(
         label="用户名",
         widget=forms.TextInput,
-        required=True, # 默认必填项
+        required=True,  # 默认必填项
     )
     password = forms.CharField(
         label="密码",

@@ -2,7 +2,6 @@ from django.shortcuts import render, HttpResponse, redirect
 from manageApp.model_card import *
 
 
-
 def login(request):
     if request.method == 'GET':
         form = LoginForm()
