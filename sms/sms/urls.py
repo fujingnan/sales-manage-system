@@ -40,5 +40,6 @@ urlpatterns = [
     path('admin/edit/<int:nid>/', admin.admin_edit),
     path('admin/delete/<int:nid>', admin.admin_delete),
     path('admin/reset/<int:nid>', admin.admin_reset),
-    path('login/', account.login)
+    path('login/', account.login),
+    path('logout/', account.logout),
 ]

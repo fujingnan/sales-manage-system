@@ -4,11 +4,11 @@ from django.shortcuts import redirect
 class AuthMiddelWare(MiddlewareMixin):
 
     def process_request(self, request):
-        if request.path_info == '/admin/login/':
+        if request.path_info == '/login/':
             return
 
         info = request.session.get('info')
         if info:
             return
         else:
-            return redirect('/admin/login/')
+            return redirect('/login/')

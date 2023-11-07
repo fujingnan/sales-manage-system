@@ -16,3 +16,10 @@ def login(request):
         request.session['info'] = {'id': admin_object.id, 'name': admin_object.username}
         return redirect('/admin/list/')
     return render(request, 'login.html', {'form': form})
+
+def logout(request):
+    """ 注销 """
+
+    request.session.clear()
+
+    return redirect('/login/')
