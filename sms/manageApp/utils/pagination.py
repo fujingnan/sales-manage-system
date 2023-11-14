@@ -38,7 +38,7 @@ class Pagination(object):
         page = self.request.GET.get(self.page_url_params)
         page = int(page) if page else 1
         items_nums = self.query.count()
-        page_total_size = math.ceil(items_nums / self.page_per_size)
+        page_total_size = max(1, math.ceil(items_nums / self.page_per_size))
         page = min(page, page_total_size)
         if page - self.page_inc <= 0:
             start = 1
@@ -62,7 +62,7 @@ class Pagination(object):
             page_list_str += '<li><a href="?{}">{}</a></li>'.format(self.page_dict.urlencode(), i)
 
         self.page_dict.setlist(self.page_url_params, [min(page + 1, page_total_size)])
-        page_list_str += '<li><a href="?{}">下一页</a></li>'.format(self.page_dict.urlencode())
+        page_list_str += '<li><a href="?{}">下一页 </a></li>'.format(self.page_dict.urlencode())
         self.page_dict.setlist(self.page_url_params, [page_total_size])
         page_list_str += '<li><a href="?{}">尾页</a></li>'.format(self.page_dict.urlencode())
         page_list_show = mark_safe(page_list_str)

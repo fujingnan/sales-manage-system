@@ -1,0 +1,156 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="container">
+        <div>
+            <!--input type="button" value="新建订单" class="btn btn-primary" data-toggle="modal" data-target="#myModal"-->
+            <input type="button" id="btnAdd" value="新建订单" class="btn btn-primary" style="margin-bottom: 10px">
+        </div>
+        <!--order_list-->
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                订单列表
+            </div>
+
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>订单号</th>
+                    <th>名称</th>
+                    <th>价格</th>
+                    <th>状态</th>
+                    <th>管理员</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in query %}
+                    <tr uid="{{ obj.id }}">
+                        <th>{{ obj.id }}</th>
+                        <td>{{ obj.oid }}</td>
+                        <td>{{ obj.title }}</td>
+                        <td>{{ obj.price }}</td>
+                        <td>{{ obj.get_status_display }}</td>
+                        <td>{{ obj.admin.username }}</td>
+                        <td>
+                            <input uid="{{ obj.id }}" type="button" class="btn btn-primary btn-xs btn-edit" value="编辑">
+                            <input uid="{{ obj.id }}" class="btn btn-danger btn-xs btn-delete" type="button" value="删除">
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="...">
+            <ul class="pagination">
+                {#                <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>#}
+                {#                <li><a href="#">1</a></li>#}
+                {#                <li><a href="#">2</a></li>#}
+                {#                <li><a href="#">3</a></li>#}
+                {#                <li><a href="#">4</a></li>#}
+                {#                <li><a href="#">5</a></li>#}
+                {{ page_list_show }}
+
+                {#                <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>#}
+                <li>
+                    <form style="float: left" method="get">
+                        <input type="text" class="form-control" name="page"
+                               style="float: left;border-radius: 0;width: 55px;display: inline-block" placeholder="页码">
+                        <span style="margin-left: 0;float: left">
+                            <button class="btn btn-default" style="border-radius: 0;" type="submit">跳转</button>
+                        </span>
+                        <span style="margin-left: 6px; margin-top: 16px; float: left">
+                            &lt 第{{ current_page }}页/共{{ page_total_size }}页 &gt
+                        </span>
+                    </form>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="formAdd">
+                        <div class="clearfix">
+                            {% for field in form %}
+                                <div class="col-xs-6">
+                                    <div class="form-group" style="position: relative;margin-bottom: 20px;">
+                                        <label>{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="error-msg" style="color: red;position: absolute;"></span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnSave" type="button" class="btn btn-primary">保 存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(function () {
+            bindBtnAddEvent();
+            bindBtnSaveEvent();
+        })
+
+        function bindBtnAddEvent() {
+            $('#btnAdd').click(function () {
+                    $('#formAdd')[0].reset();
+                    $('#myModalLabel').text('新建商品信息')
+                    $('#myModal').modal('show');
+                }
+            );
+        }
+
+        function bindBtnSaveEvent() {
+            $('#btnSave').click(function () {
+                    $(".error-msg").empty();
+                    eventAdd();
+                }
+            );
+        }
+
+        function eventAdd() {
+            $.ajax(
+                {
+                    url: '/order/add/',
+                    type: 'post',
+                    data: $('#formAdd').serialize(),
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if (res.status) {
+                            $('#formAdd')[0].reset();
+                            $('#myModal').modal('hide');
+                            location.reload();
+                        } else {
+                            console.log(res.error)
+                            $.each(res.error, function (name, errorlist) {
+                                $('#id_' + name).next().text(errorlist[0])
+                            })
+                        }
+                    }
+
+                }
+            )
+        }
+    </script>
+{% endblock %}

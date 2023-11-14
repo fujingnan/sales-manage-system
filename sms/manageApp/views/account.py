@@ -14,7 +14,7 @@ def login(request):
         system_code = request.session.get("image_code", "")
         user_code = form.cleaned_data.pop("user_code")
         if system_code.upper() != user_code.upper():
-            form.add_error("user_image", '验证码错误')
+            form.add_error("user_code", '验证码错误')
             return render(request, 'login.html', {'form': form})
         admin_object = models.Admin.objects.filter(**form.cleaned_data).first()
         if not admin_object:
@@ -43,7 +43,7 @@ def image_code(request):
     # 写入到自己的session中（以便于后续获取验证码再进行校验）
     request.session['image_code'] = code_string
     # 给Session设置60s超时
-    request.session.set_expiry(60)
+    request.session.set_expiry(60 * 60 * 24)
 
     stream = BytesIO()
     img.save(stream, 'png')

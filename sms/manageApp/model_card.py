@@ -179,3 +179,10 @@ class LoginForm(BootStrapForm):
     def clean_password(self):
         pwd = self.cleaned_data.get('password')
         return md5(pwd)
+
+class OrderModelForm(BootStrapModelForm):
+    class Meta:
+        model = models.Order
+        # fields = "__all__"
+        # fields = [""]
+        exclude = ["oid", 'admin']
