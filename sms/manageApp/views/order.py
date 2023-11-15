@@ -33,3 +33,18 @@ def order_add(request):
         form.save()
         return HttpResponse(json.dumps({"status": True}))
     return HttpResponse(json.dumps({"status": False, "error": form.errors}))
+
+
+def order_delete(request):
+    uid = request.GET.get('uid')
+    if models.Order.objects.filter(id=uid).exists():
+        models.Order.objects.filter(id=uid).delete()
+        return HttpResponse(json.dumps({
+            'status': True
+        }))
+    return HttpResponse(json.dumps(
+        {
+            'status': False,
+            'error': '删除失败，数据不存在！'
+        }
+    ))
