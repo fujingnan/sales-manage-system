@@ -119,7 +119,9 @@
                 <h4>确定删除？</h4>
                 <p style="margin-bottom: 10px">删除后，其关联数据会被同时删除，操作不可恢复，请谨慎操作！</p>
                 <p class="btn-container">
-                    <button type="button" class="btn btn-default" style="margin-right: 10px">不，谢谢</button>
+                    <button type="button" class="btn btn-default cancel" style="margin-right: 10px">
+                        不用，谢谢
+                    </button>
                     <button id="btn-confirm-delete" type="button" class="btn btn-danger">仍然要删除</button>
                 </p>
             </div>
@@ -137,6 +139,8 @@
             bindBtnSaveEvent();
             bindBtnDeleteEvent();
             bindBtnConfirmDeleteEvent();
+            bingBtnCancelDeleteEvent();
+            bindBtnEditEvent();
         })
 
         function bindBtnAddEvent() {
@@ -189,6 +193,44 @@
                 }
             )
 
+        }
+
+        function bingBtnCancelDeleteEvent() {
+            $('.close, .cancel').on('click', function () {
+                $('#deleteModal').modal('hide');
+                DELETE_ID = 0;
+                location.reload();
+
+            });
+
+        }
+
+        function bindBtnEditEvent() {
+            $('.btn-edit').click(function () {
+                var uid = $(this).attr("uid");
+                EDIT_ID = uid;
+                $('#myModalLabel').text('编辑商品信息')
+                $.ajax(
+                    {
+                        url: '/order/details/',
+                        type: 'get',
+                        data: {
+                            uid: uid,
+                        },
+                        dataType: 'JSON',
+                        success: function (res) {
+                            if (res.status){
+                                $.each(res.data, function (name, value) {
+                                    $('#id_' + name).val(value)
+                                })
+                                $('#myModal').modal('show');
+                            }else {
+                                alert(res.error)
+                            }
+                        }
+                    }
+                )
+            })
         }
 
         function eventAdd() {

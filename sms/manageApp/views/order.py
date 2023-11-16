@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
+from django.http import JsonResponse
 from manageApp.model_card import *
 from manageApp.utils.pagination import Pagination
 from django.views.decorators.csrf import csrf_exempt
@@ -48,3 +49,15 @@ def order_delete(request):
             'error': '删除失败，数据不存在！'
         }
     ))
+
+
+def order_details(request):
+    uid = request.GET.get('uid')
+    request_query = models.Order.objects.filter(id=uid).values("title", 'price', 'status').first()
+    if not request_query:
+        return JsonResponse({'status': False, 'error': '数据不存在！'})
+    request_query = {
+        'status': True,
+        'data': request_query
+    }
+    return JsonResponse(request_query)

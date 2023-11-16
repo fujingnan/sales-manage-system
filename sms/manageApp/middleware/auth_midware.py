@@ -1,6 +1,7 @@
 from django.utils.deprecation import MiddlewareMixin
 from django.shortcuts import redirect
 
+
 class AuthMiddelWare(MiddlewareMixin):
 
     def process_request(self, request):
