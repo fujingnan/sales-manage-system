@@ -11,7 +11,7 @@
     <div class="container">
         <div>
             <!--input type="button" value="新建订单" class="btn btn-primary" data-toggle="modal" data-target="#myModal"-->
-            <input type="button" id="btnAdd" value="新建订单" class="btn btn-primary" style="margin-bottom: 10px">
+            <input type="button" id="btnAdd" value="新建订单" class="btn btn-success" style="margin-bottom: 10px">
         </div>
         <!--order_list-->
         <div class="panel panel-default">
@@ -96,7 +96,7 @@
                                     <div class="form-group" style="position: relative;margin-bottom: 20px;">
                                         <label>{{ field.label }}</label>
                                         {{ field }}
-                                        <span class="error-msg" style="color: red;position: absolute;"></span>
+                                        <span class="error-msg" style="color: #ff0000;position: absolute;"></span>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -120,9 +120,9 @@
                 <p style="margin-bottom: 10px">删除后，其关联数据会被同时删除，操作不可恢复，请谨慎操作！</p>
                 <p class="btn-container">
                     <button type="button" class="btn btn-default cancel" style="margin-right: 10px">
-                        不用，谢谢
+                        不用了，谢谢
                     </button>
-                    <button id="btn-confirm-delete" type="button" class="btn btn-danger">仍然要删除</button>
+                    <button id="btn-confirm-delete" type="button" class="btn btn-danger">仍要删除</button>
                 </p>
             </div>
 
@@ -134,6 +134,7 @@
 {% block js %}
     <script type="text/javascript">
         var DELETE_ID;
+        var EDIT_ID;
         $(function () {
             bindBtnAddEvent();
             bindBtnSaveEvent();
@@ -155,7 +156,12 @@
         function bindBtnSaveEvent() {
             $('#btnSave').click(function () {
                     $(".error-msg").empty();
-                    eventAdd();
+                    if (EDIT_ID) {
+                        editSave();
+                        EDIT_ID = undefined;
+                    } else {
+                        eventAdd();
+                    }
                 }
             );
         }
@@ -219,12 +225,12 @@
                         },
                         dataType: 'JSON',
                         success: function (res) {
-                            if (res.status){
+                            if (res.status) {
                                 $.each(res.data, function (name, value) {
                                     $('#id_' + name).val(value)
                                 })
                                 $('#myModal').modal('show');
-                            }else {
+                            } else {
                                 alert(res.error)
                             }
                         }
@@ -253,6 +259,35 @@
                         }
                     }
 
+                }
+            )
+        }
+
+        function editSave() {
+            var uid;
+            uid = EDIT_ID;
+            $.ajax(
+                {
+                    url: '/order/edit/' + '?uid=' + EDIT_ID,
+                    type: 'post',
+                    data: $('#formAdd').serialize(),
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if (res.status) {
+                            $('#formAdd')[0].reset();
+                            $('#myModal').modal('hide');
+                            location.reload();
+                        } else {
+                            if (res.unexist_error) {
+                                alert(res.unexist_error)
+                            } else {
+                                console.log(res.error)
+                                $.each(res.error, function (name, errorlist) {
+                                    $('#id_' + name).next().text(errorlist[0])
+                                })
+                            }
+                        }
+                    }
                 }
             )
         }
